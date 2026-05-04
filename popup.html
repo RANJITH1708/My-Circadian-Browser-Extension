@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Circadian Companion</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body class="light-theme">
+    <div class="container">
+        <div class="flipper">
+            <div class="main-view">
+                <header class="header">
+                    <h1 class="title"> My Circadian</h1>
+                    <div class="header-buttons">
+                        <button id="powerButton" class="icon-btn power-btn" title="Toggle Extension On/Off">ON</button>
+                        <button id="themeToggleButton" class="icon-btn" title="Toggle Dark/Light Mode">🌙</button>
+                        <button id="goToHelpButton" class="icon-btn" title="Help & Info">?</button>
+                    </div>
+                </header>
+                <p id="status-text" class="status-display">Loading status...</p>
+                <div class="status-bar-container" id="statusBar">
+                    <div class="status-track">
+                        <div class="animation-container" id="animationContainer">
+                            <div class="character person-walking">🚶</div>
+                            <div class="character pet">🐩</div>
+                            <div class="character person-relaxing">🧘</div>
+                            <div class="character beverage">🍵</div>
+                            <div class="character person-sleeping">😴</div>
+                            <div class="character bed">🛏️</div>
+                        </div>
+                    </div>
+                    <div class="celestial-object" id="celestialObject">☀️</div>
+                    <div class="time-stamp start-time" id="wakeTimeDisplay">7:00 AM</div>
+                    <div class="time-stamp end-time" id="sleepTimeDisplay">7:00 PM</div>
+                </div>
+                <div class="control-grid">
+                    <div class="control-section">
+                        <h2 class="control-label">Brightness</h2>
+                        <div class="value-display"><span id="brightnessValue">100</span>%</div>
+                        <input type="range" id="brightnessSlider" class="slider-control" min="50" max="100" value="100">
+                    </div>
+                    <div class="control-section">
+                        <h2 class="control-label">Warmth</h2>
+                        <div class="value-display"><span id="warmthValue">0</span>%</div>
+                        <input type="range" id="warmthSlider" class="slider-control" min="0" max="100" value="0">
+                    </div>
+                </div>
+                <button id="goToScheduleButton" class="action-button-main">Customize Schedule</button>
+                <div class="action-buttons-group">
+                    <button id="nightOwlButton" title="Instantly apply night-time settings.">Night Owl</button>
+                    <button id="resetToAutoButton" title="Return to your automatic or custom schedule.">Auto Mode</button>
+                    <div class="dropdown-container" id="pauseDropdownContainer">
+                        <button id="pauseButton" class="dropdown-toggle" title="Temporarily disable the extension.">Pause ▾</button>
+                        <div class="dropdown-menu" id="pauseDropdownMenu">
+                            <a href="#" data-minutes="15">For 15 minutes</a>
+                            <a href="#" data-minutes="30">For 30 minutes</a>
+                            <a href="#" data-minutes="60">For 1 hour</a>
+                        </div>
+                    </div>
+                </div>
+                <p class="review-prompt">😊 <a href="https://chromewebstore.google.com/detail/my-circadian/femmajfmdpemdkkjdgooimlhbkchbhla" target="_blank">If you like this extension, please leave a review!</a></p>
+            </div>
+
+            <div class="advanced-view">
+                 <header class="advanced-header">
+                     <h2 class="hub-title">Automatic Schedule</h2>
+                    <button id="back-to-main-btn" class="icon-btn" title="Back to Main View">←</button>
+                </header>
+                <div class="advanced-scroll-container">
+                    <div class="advanced-section">
+                        <h3>Set Your Cycle</h3>
+                        <p class="help-text">Set your wake & sleep times.</p>
+                        <label>Wake-up Time:</label>
+                        <div class="custom-select" id="wakeTimeSelect" data-value="07:00">
+                            <button class="select-button"><span class="select-value">07:00 AM</span><span class="select-arrow">▾</span></button>
+                            <div class="select-panel" id="wakeTimePanel"></div>
+                        </div>
+                        <label>Sleep Time:</label>
+                        <div class="custom-select" id="sleepTimeSelect" data-value="19:00">
+                             <button class="select-button"><span class="select-value">07:00 PM</span><span class="select-arrow">▾</span></button>
+                            <div class="select-panel" id="sleepTimePanel"></div>
+                        </div>
+                        <label title="Minutes before sleep time to gradually warm the screen.">Engage Night Mode:</label>
+                         <div class="custom-select" id="engageMinutesSelect" data-value="180">
+                             <button class="select-button"><span class="select-value">3 hours before sleep</span><span class="select-arrow">▾</span></button>
+                            <div class="select-panel" id="engageMinutesPanel">
+                                <div class="select-option" data-value="30">30 minutes before sleep</div>
+                                <div class="select-option" data-value="60">1 hour before sleep</div>
+                                <div class="select-option" data-value="90">1.5 hours before sleep</div>
+                                <div class="select-option" data-value="120">2 hours before sleep</div>
+                                <div class="select-option" data-value="180">3 hours before sleep</div>
+                                <div class="select-option" data-value="240">4 hours before sleep</div>
+                                <div class="select-option" data-value="300">5 hours before sleep</div>
+                                <div class="select-option" data-value="360">6 hours before sleep</div>
+                            </div>
+                        </div>
+                        
+                        <button id="goToSettingsButton" class="action-button-secondary">Customize Appearance</button>
+                        
+                        <button id="saveButton">Save Schedule</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-view">
+                <header class="advanced-header">
+                    <h2 class="hub-title">Appearance Settings</h2>
+                    <button id="backToScheduleButton" class="icon-btn" title="Back to Schedule">←</button>
+                </header>
+
+                <div class="settings-scroll-container">
+                    <label class="settings-label">Choose Character</label>
+                    <div class="custom-select" id="characterSelect" data-value="walker">
+                        <button class="select-button"><span class="select-value">Walker 🚶</span><span class="select-arrow">▾</span></button>
+                        <div class="select-panel">
+                            <div class="select-option" data-value="walker">Walker 🚶</div>
+                            <div class="select-option" data-value="runner">Runner 🏃</div>
+                            <div class="select-option" data-value="woman">Woman 🚶‍♀️</div>
+                            <div class="select-option" data-value="man">Man 🚶‍♂️</div>
+                            <div class="select-option" data-value="robot">Robot 🤖</div>
+                        </div>
+                    </div>
+
+                    <label class="settings-label">Choose Pet</label>
+                    <div class="custom-select" id="petSelect" data-value="poodle">
+                        <button class="select-button"><span class="select-value">Poodle 🐩</span><span class="select-arrow">▾</span></button>
+                        <div class="select-panel">
+                            <div class="select-option" data-value="poodle">Poodle 🐩</div>
+                            <div class="select-option" data-value="dog">Dog 🐕</div>
+                            <div class="select-option" data-value="cat">Cat 🐈</div>
+                            <div class="select-option" data-value="fox">Fox 🦊</div>
+                            <div class="select-option" data-value="turtle">Turtle 🐢</div>
+                        </div>
+                    </div>
+                    
+                    <label class="settings-label">Evening Activity</label>
+                    <div class="custom-select" id="relaxingActivitySelect" data-value="meditating">
+                        <button class="select-button"><span class="select-value">Meditating 🧘</span><span class="select-arrow">▾</span></button>
+                        <div class="select-panel">
+                            <div class="select-option" data-value="meditating">Meditating 🧘</div>
+                            <div class="select-option" data-value="reading">Reading 📖</div>
+                            <div class="select-option" data-value="gaming">Gaming 🎮</div>
+                            <div class="select-option" data-value="music">Music 🎵</div>
+                        </div>
+                    </div>
+
+                    <div class="schedule-settings-grid">
+                        <div class="control-section compact">
+                            <h2 class="control-label">Day Settings</h2>
+                            <label class="slider-label">Brightness: <span id="dayBrightnessValue">100</span>%</label>
+                            <input type="range" id="dayBrightnessSlider" class="slider-control" min="50" max="100">
+                            <label class="slider-label">Warmth: <span id="dayWarmthValue">0</span>%</label>
+                            <input type="range" id="dayWarmthSlider" class="slider-control" min="0" max="100">
+                        </div>
+                        <div class="control-section compact">
+                            <h2 class="control-label">Night Settings</h2>
+                            <label class="slider-label">Brightness: <span id="nightBrightnessValue">85</span>%</label>
+                            <input type="range" id="nightBrightnessSlider" class="slider-control" min="50" max="100">
+                            <label class="slider-label">Warmth: <span id="nightWarmthValue">50</span>%</label>
+                            <input type="range" id="nightWarmthSlider" class="slider-control" min="0" max="100">
+                        </div>
+                    </div>
+                    <button id="resetAppearanceButton" class="action-button-secondary">Reset Brightness & Warmth</button>
+                </div>
+            </div>
+
+            <div class="help-view">
+                <header class="advanced-header">
+                    <h2 class="hub-title">Why This Matters</h2>
+                   <button id="back-to-main-from-help-btn" class="icon-btn" title="Back to Main View">←</button>
+               </header>
+               <div class="help-content">
+                   <h3>The Circadian Rhythm</h3>
+                   <p>Your body has a natural 24-hour internal clock. Light, especially blue light from screens, signals to your brain that it's daytime.</p>
+                   <h3>Evening Screen Time</h3>
+                   <p>Exposure to bright, cool-toned light at night can disrupt this clock, making it harder to fall asleep and reducing overall sleep quality.</p>
+                   <h3>How We Help</h3>
+                   <p>This extension gradually reduces screen brightness and adds a warm tint in the evening, mimicking a natural sunset to help your body wind down for a better night's rest.</p>
+               </div>
+           </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
