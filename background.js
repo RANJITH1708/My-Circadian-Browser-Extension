@@ -8,17 +8,26 @@ async function updateAllTabs(options = {}) {
 }
 
 // --- Helper function to apply styles ---
-function applyToAllTabs(styles) {
+function applyToAllTabs(styles, onlyTabId) {
     if (!styles) { return; }
     chrome.tabs.query({ url: ["http://*/*", "https://*/*"] }, (tabs) => {
-        tabs.forEach(tab => {
+        tabs.filter(tab => !onlyTabId || tab.id === onlyTabId).forEach(tab => {
             chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 func: (brightness, warmth, speed) => {
-                    document.documentElement.style.transition = `filter ${speed}s ease-out`;
-                    document.documentElement.style.filter = `brightness(${brightness})`;
                     const overlayId = 'circadian-companion-overlay';
                     let overlay = document.getElementById(overlayId);
+                    // Neutral (off, paused, plain daylight): take our filter and overlay back off the page.
+                    if (brightness === 1 && warmth === 0) {
+                        if (overlay) {
+                            overlay.remove();
+                            document.documentElement.style.filter = '';
+                            document.documentElement.style.transition = '';
+                        }
+                        return;
+                    }
+                    document.documentElement.style.transition = `filter ${speed}s ease-out`;
+                    document.documentElement.style.filter = `brightness(${brightness})`;
                     if (!overlay) {
                         overlay = document.createElement('div');
                         overlay.id = overlayId;
@@ -164,7 +173,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete' && tab.url && tab.url.startsWith('http')) {
         getCurrentStyle().then(styles => {
-             applyToAllTabs(styles);
+             applyToAllTabs(styles, tabId);
         });
     }
 });
